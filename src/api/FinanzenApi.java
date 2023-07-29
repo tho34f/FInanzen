@@ -22,8 +22,9 @@ public class FinanzenApi {
 		List<News> newsListToCreate = new ArrayList<>();
 		List<Node> newsList = new ArrayList<>();
 		
-		Document doc = Jsoup.connect(Konstanten.PREFIX + "nachrichten/topnachrichten").get();
-		Elements element =  doc.select("table[class='table news-list']");
+		Document doc = Jsoup.connect(Konstanten.PREFIX + "news/").get();
+		Node childNode = doc.childNode(4).childNode(1).childNode(5).childNode(2).childNode(3).childNode(1);
+		Elements element =  doc.select("article[class='page-content__item']");
 		Node newsTable;
 		if(!element.isEmpty()) {
 			newsTable = element.get(0).childNodes().get(1);

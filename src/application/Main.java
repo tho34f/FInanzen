@@ -10,7 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import layout.LayoutElements;
 import layout.LayoutService;
@@ -24,7 +24,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 			
-		Pane root = new Pane();
+		BorderPane root = new BorderPane();
 		Scene scene = new Scene(root,1800,1000);
 		LayoutElements elements = new LayoutElements();
 		MainData mainData = new MainData();
@@ -43,6 +43,7 @@ public class Main extends Application {
 		});
 		
 		LayoutService.createLayoutLvNews(root, elements);
+		LayoutService.createLayoutKontoStaende(root, elements);
 		LayoutService.setMainSettingsPrimaryStage(primaryStage, scene, elements);
 		primaryStage.show();
 	}

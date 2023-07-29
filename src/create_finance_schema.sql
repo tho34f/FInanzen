@@ -8,6 +8,7 @@ Create Table years (
 CREATE TABLE financeproduct (
 	id int not null AUTO_INCREMENT,
     bezeichnung mediumtext NOT NULL,
+    standing bigint,
     CONSTRAINT pk_financeproduct Primary Key (id)
 );
 
