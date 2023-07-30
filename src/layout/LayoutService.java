@@ -7,17 +7,25 @@ import data.Konstanten;
 import data.MainData;
 import data.News;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import queries.MySql;
+import service.DierkesLooger;
 
 public class LayoutService {
+	
+	private final DierkesLooger LOGGER = new DierkesLooger();
+	private static final Insets PADDING_ONE = new Insets(0, 0,15, 0);
+	private static final Insets PADDING_TWO = new Insets(15, 15, 15, 15);
 	
 	private LayoutService() {
 		throw new IllegalStateException("Utility class");
@@ -37,9 +45,23 @@ public class LayoutService {
 	        elements.getLvNews().getItems().add(label);
 		}
     }
+	
+	public static void createMenuBar(LayoutElements elements) {
+		elements.getMenuBar().setPrefWidth(1000);
+		elements.getMenuBar().getMenus().addAll(elements.getMenuFile(), elements.getMenuEdit(), elements.getMenuView());
+		elements.getCloseApplication().setGraphic(createImageView(elements.getExit()));
+		elements.getMenuFile().getItems().addAll(elements.getCloseApplication());
+	}
+	
+	public static void createTopBorder(BorderPane root, LayoutElements elements) {
+		VBox topBorder = createVBOXWithAlignment(10, PADDING_ONE);
+		elements.getWelcome().setFont(Font.font("cambria", 24));
+		topBorder.getChildren().addAll(elements.getMenuBar(), elements.getWelcome());
+		root.setTop(topBorder);
+	}
 
 	public static void createLayoutLvNews(BorderPane root, LayoutElements elements) {
-		VBox leftBorder = LayoutService.createVBOX(10, new Insets(15, 15, 15, 15));
+		VBox leftBorder = createVBOX(10, PADDING_TWO);
 		elements.getLvNews().setPrefWidth(400);
 		elements.getLvNews().relocate(10, 30);
 		elements.getNewsListLabel().relocate(10, 10);
@@ -48,7 +70,7 @@ public class LayoutService {
 	}
 	
 	public static void createLayoutKontoStaende(BorderPane root, LayoutElements elements) {
-		VBox rightBorder = createVBOX(10, new Insets(15, 15, 15, 15));
+		VBox rightBorder = createVBOX(10, PADDING_TWO);
 		HBox hLeftBorder = null;
 		Label productLabel = null;
 		TextField productField = null;
@@ -89,6 +111,28 @@ public class LayoutService {
 		HBox hbox = new HBox();
 		hbox.setSpacing(spacing);
 		return hbox;
+	}
+	
+	public static VBox createVBOXWithAlignment(double spacing, Insets padding) {
+		VBox vbox = new VBox();
+		vbox.setSpacing(spacing);
+		vbox.setPadding(padding);
+		vbox.setAlignment(Pos.CENTER);
+		return vbox;
+	}
+	
+	public static ImageView createImageView(Image im) {
+		ImageView iv = new ImageView(im);
+		iv.setFitHeight(20);
+		iv.setFitWidth(20);
+		return iv;
+	}
+
+	public static void createLayout(BorderPane root, LayoutElements elements) {
+		createMenuBar(elements);
+		createTopBorder(root, elements);
+		createLayoutLvNews(root, elements);
+		createLayoutKontoStaende(root, elements);
 	}
 
 }

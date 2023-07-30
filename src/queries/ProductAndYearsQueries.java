@@ -42,6 +42,29 @@ public class ProductAndYearsQueries extends AbstractQueries {
 		return financeProducts;
 	}
 	
+	public FinanceProduct getFinanceProduct(int id) {
+		LOGGER.writeInfoLog("getFinanceProduct()", ProductAndYearsQueries.class.getName());
+		FinanceProduct financeProduct = null;
+		
+		try(Connection con = getSql().getConnection()){
+			LOGGER.writeInfoLog("getFinanceProduct(): Verbindung zur DB erfolgreich", ProductAndYearsQueries.class.getName());
+			String sql = "SELECT * FROM financeproduct WHERE id = ?";
+			try(PreparedStatement pstmt = con.prepareStatement(sql)){
+				pstmt.setInt(1, id);
+				try(ResultSet rs = pstmt.executeQuery()){
+					if(rs.next()) {
+						financeProduct = new FinanceProduct(rs.getInt("id"),rs.getString("bezeichnung"), rs.getLong("standing"));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.writeExceptionLog(e, "getFinanceProduct(): SQL-Exception", ProductAndYearsQueries.class.getName());
+			return financeProduct;
+		}
+		
+		return financeProduct;
+	}
+	
 	public boolean saveNewFinanceProduct(String name, long standing) {
 		LOGGER.writeInfoLog("saveNewFinanceProducts()", ProductAndYearsQueries.class.getName());
 		boolean success = true;
@@ -56,6 +79,27 @@ public class ProductAndYearsQueries extends AbstractQueries {
 			}
 		} catch (SQLException e) {
 			LOGGER.writeExceptionLog(e, "saveNewFinanceProducts(): SQL-Exception", ProductAndYearsQueries.class.getName());
+			return false;
+		}
+		
+		return success;
+	}
+	
+	public boolean updateFinanceProduct(FinanceProduct product) {
+		LOGGER.writeInfoLog("updateFinanceProduct()", ProductAndYearsQueries.class.getName());
+		boolean success = true;
+		
+		try(Connection con = getSql().getConnection()){
+			LOGGER.writeInfoLog("updateFinanceProduct(): Verbindung zur DB erfolgreich", ProductAndYearsQueries.class.getName());
+			String sql = "UPDATE financeproduct SET bezeicnung = ?, standing = ? WHERE id = ?;";
+			try(PreparedStatement pstmt = con.prepareStatement(sql)){
+				pstmt.setString(1, product.getBezeichnung());
+				pstmt.setLong(2, product.getStanding());
+				pstmt.setInt(3, product.getId());
+				success = pstmt.execute();
+			}
+		} catch (SQLException e) {
+			LOGGER.writeExceptionLog(e, "updateFinanceProduct(): SQL-Exception", ProductAndYearsQueries.class.getName());
 			return false;
 		}
 		

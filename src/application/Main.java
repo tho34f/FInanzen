@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import layout.LayoutElements;
 import layout.LayoutService;
+import service.ButtonService;
 import service.DierkesLooger;
 
 
@@ -42,8 +43,8 @@ public class Main extends Application {
 			LOOGER.writeInfoLog(newsModel.getSelectedItem().getText(), Main.class.getName());
 		});
 		
-		LayoutService.createLayoutLvNews(root, elements);
-		LayoutService.createLayoutKontoStaende(root, elements);
+		LayoutService.createLayout(root, elements);
+		ButtonService.onClose(elements);
 		LayoutService.setMainSettingsPrimaryStage(primaryStage, scene, elements);
 		primaryStage.show();
 	}
